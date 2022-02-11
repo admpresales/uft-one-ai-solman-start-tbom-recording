@@ -1,5 +1,1 @@
-﻿<Properties>
-  <WatchEntry0 value="AIUtil(&quot;check_box&quot;, micAnyText, micWithAnchorOnRight, AIUtil.FindText(&quot;TBOM&quot;,micFromLeft,1)).Highlight" />
-  <WatchEntry1 value="AIUtil(&quot;check_box&quot;, micAnyText, micWithAnchorBelow, AIUtil.FindText(&quot;TBOM&quot;))" />
-  <WatchEntry2 value="AIUtil.FindText(&quot;TBOM&quot;,micFromLeft,1).Highlight" />
-</Properties>
+﻿<Properties />

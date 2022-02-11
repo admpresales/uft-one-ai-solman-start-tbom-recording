@@ -26,8 +26,9 @@ Do
 	counter = counter + 1
 	wait 1
 	If counter >= 60 Then
-		msgbox "The search icon didn't show up within " & counter & " tries, check application."
-		ExitTest
+		'msgbox "The search icon didn't show up within " & counter & " tries, check application."
+		Reporter.ReportEvent micFail, "Login", "Login failed.  The search icon didn't show up within " & counter & " tries, check application."
+		ExitTestIteration
 	End If
 	
 	If counter>=3 Then
