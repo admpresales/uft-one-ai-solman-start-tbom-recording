@@ -1,5 +1,24 @@
-﻿Dim BrowserExecutable, oShell, counter
+﻿'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'	Script limitations:
+'		The script doesn't handle if the TCODE is in multiple BPH nodes, it will only create the TBOM work list item for the first BPH node in the list.
+'			This is due to a limitation of SAP Solution Manager, when you ask it to create multiple work list items, it only tells you the task number
+'			for the first record that you selected.
+'		The script doesn't handle if the status of the TBOM is Obsolete because the dev system didn't have any Obsolete status TBOMs.
+'		The script assumes that if there is no TBOM for the TCode, there is no Work Item created either.  If there is, the script will select the originally
+'			created workitem for that TCode (due to that same Solution Manager limitation), even though it may create another work item too.
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+Dim BrowserExecutable, oShell, counter, fso, filespec
+
+'Deletes the .sap file if the file exists
+Set fso = CreateObject("Scripting.FileSystemObject")
+filespec = "C:\Users\demo\Downloads\ags_work_appln.sap"
+If (fso.FileExists(filespec)) Then
+	fso.DeleteFile(filespec)
+End If
+Set fso = Nothing
+
+'Starts the mediaserver service (even if it is already started).
 Set oShell = CreateObject ("WSCript.shell")
 oShell.run "powershell -command ""Start-Service mediaserver"""
 Set oShell = Nothing
@@ -17,7 +36,7 @@ AppContext.Maximize																		'Maximize the application to give the best 
 AppContext.Sync																			'Wait for the browser to stop spinning
 AIUtil.SetContext AppContext																'Tell the AI engine to point at the application
 
-AIUtil("text_box", "Useri""").Type DataTable.Value("Login")
+AIUtil("text_box", micAnyText, micWithAnchorOnLeft, AIUtil.FindText("User")).Type DataTable.Value("Login")
 AIUtil("text_box", "Password").Type DataTable.Value("Password")
 AIUtil("button", "Log On").Click
 

@@ -1,4 +1,4 @@
-﻿Dim oShell
+﻿Dim oShell, counter
 
 BrowserExecutable = DataTable.Value("BrowserName") & ".exe"
 SystemUtil.Run BrowserExecutable,"","","",3												'launch the browser specified in the data table
@@ -9,8 +9,8 @@ AppContext.Navigate DataTable.Value("WorkItemsURL")												'Navigate to the 
 AppContext.Maximize																		'Maximize the application to give the best chance that the fields will be visible on the screen
 AppContext.Sync																			'Wait for the browser to stop spinning
 AIUtil.SetContext AppContext																'Tell the AI engine to point at the application
-If AIUtil("text_box", "Useri""").Exist Then
-	AIUtil("text_box", "Useri""").Type DataTable.Value("Login")
+If AIUtil("text_box", "User").Exist Then
+	AIUtil("text_box", "User").Type DataTable.Value("Login")
 	AIUtil("text_box", "Password").Type DataTable.Value("Password")
 	AIUtil("button", "Log On").Click
 	counter = 0
@@ -35,7 +35,17 @@ AIUtil.FindTextBlock("ID").Click
 AIUtil.FindTextBlock("(User-Defined Filter...)").Click
 AIUtil("text_box", micAnyText, micWithAnchorOnLeft, AIUtil("combobox", "", micWithAnchorOnLeft, AIUtil("combobox", "Reset"))).Type DataTable.Value("WorkItemNumber")
 AIUtil("button", "OK").Click
-AIUtil("check_box", micAnyText, micFromTop, 2).SetState "On"
+counter = 0
+Do
+	counter = counter + 1
+	AIUtil("check_box", micAnyText, micFromTop, 2).SetState "On"
+	If counter >= 60 Then
+		'msgbox "The search icon didn't show up within " & counter & " tries, check application."
+		Reporter.ReportEvent micFail, "Click WorkItemNumber", "The WorkItemNumber link "&  DataTable.Value("WorkItemNumber") & " didn't show up within " & counter & " tries, check application."
+		ExitTestIteration
+	End If
+Loop Until AIUtil.FindText(DataTable.Value("WorkItemNumber")).Exist(0)
+
 AIUtil.FindText(DataTable.Value("WorkItemNumber")).Click
 AIUtil("button", "Edit").Click
 AIUtil("button", "Create TBOM").Click
@@ -56,9 +66,4 @@ Do
 	End If
 Loop Until SAPGuiSession("Session").SAPGuiWindow("TBOM Recording for Transaction").SAPGuiButton("Start Recording").Exist(0)
 SAPGuiSession("Session").SAPGuiWindow("TBOM Recording for Transaction").SAPGuiButton("Start Recording").Click
-
-
-Set AppContext=Browser("CreationTime:=0")												'Set the variable for what application (in this case the browser) we are acting upon
-AIUtil.SetContext AppContext																'Tell the AI engine to point at the application
-AIUtil("check_box", micAnyText, micFromTop, 2).Highlight
 

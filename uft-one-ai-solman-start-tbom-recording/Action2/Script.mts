@@ -16,8 +16,15 @@ ElseIf AIUtil.FindText("Your search did not match").Exist Then
 	Reporter.ReportEvent micFail, "Check TCode in BPH", "The TCode " & DataTable.Value("TCode") & " isn't associated with any BPH node.  Please set the executable to a BPH node and re-run"
 	ExitTestIteration
 End If
+If AIUtil.FindTextBlock("Type v").Exist Then
+	'Type filter applied
+Else
+	AppContext.Close
+	Reporter.ReportEvent micFail, "Type Filter", "The Type filter didn't apply, check application."
+	ExitTestIteration
+End If
 
-If AIUtil("check_box", micAnyText, micWithAnchorOnRight, AIUtil.FindText("TBOM",micFromLeft,1)).Exist Then
+If AIUtil("check_box", micAnyText, micWithAnchorOnRight, AIUtil.FindText("TBOM",micFromLeft,1)).Exist(0) Then
 	AIUtil("check_box", micAnyText, micWithAnchorOnRight, AIUtil.FindText("TBOM",micFromLeft,1)).SetState "On"
 	AIUtil.FindTextBlock("Name").Click
 	AIUtil("plus").Click
@@ -35,17 +42,17 @@ If AIUtil("check_box", micAnyText, micWithAnchorOnRight, AIUtil.FindText("TBOM",
 Else
 	'msgbox "No TBOM record exists yet"
 	AIUtil("check_box", micAnyText, micWithAnchorOnRight, AIUtil.FindText("Transaction <Exec.Ref.>",micFromLeft,1)).SetState "On"
-	AIUtil("check_box", "Name").SetState "On"
 	counter = 0
 	Do
 		counter = counter + 1
+		AIUtil("check_box", "Name").SetState "On"
 		If counter >= 60 Then
 			'msgbox "The search icon didn't show up within " & counter & " tries, check application."
-			Reporter.ReportEvent micFail, "Setting Check Box On", "The text Classifications did not show up within " & counter & " tries, check application."
+			Reporter.ReportEvent micFail, "Setting Check Box On", "The No Elements Selected is still displaying after " & counter & " tries, check application."
 			ExitTestIteration
 		End If
 		wait 1
-	Loop Until AIUtil.FindTextBlock("Classifications").Exist(0)
+	Loop While AIUtil.FindText("No Elements Selected").Exist(0)
 	Setting.WebPackage("ReplayType") = 2
 	Browser("Solution Documentation").Page("Solution Documentation").WebElement("First_Transaction_Exec_Ref").RightClick
 	Setting.WebPackage("ReplayType") = 1
