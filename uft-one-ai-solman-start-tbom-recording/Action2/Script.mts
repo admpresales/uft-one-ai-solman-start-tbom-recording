@@ -45,7 +45,7 @@ Else
 			ExitTestIteration
 		End If
 		wait 1
-	Loop Until AIUtil.FindTextBlock("Classifications").Exist
+	Loop Until AIUtil.FindTextBlock("Classifications").Exist(0)
 	Setting.WebPackage("ReplayType") = 2
 	Browser("Solution Documentation").Page("Solution Documentation").WebElement("First_Transaction_Exec_Ref").RightClick
 	Setting.WebPackage("ReplayType") = 1
