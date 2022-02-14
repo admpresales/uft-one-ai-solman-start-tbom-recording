@@ -36,7 +36,16 @@ Else
 	'msgbox "No TBOM record exists yet"
 	AIUtil("check_box", micAnyText, micWithAnchorOnRight, AIUtil.FindText("Transaction <Exec.Ref.>",micFromLeft,1)).SetState "On"
 	AIUtil("check_box", "Name").SetState "On"
-	AIUtil.FindTextBlock("Classifications").CheckExists True
+	counter = 0
+	Do
+		counter = counter + 1
+		If counter >= 60 Then
+			'msgbox "The search icon didn't show up within " & counter & " tries, check application."
+			Reporter.ReportEvent micFail, "Setting Check Box On", "The text Classifications did not show up within " & counter & " tries, check application."
+			ExitTestIteration
+		End If
+		wait 1
+	Loop Until AIUtil.FindTextBlock("Classifications").Exist
 	Setting.WebPackage("ReplayType") = 2
 	Browser("Solution Documentation").Page("Solution Documentation").WebElement("First_Transaction_Exec_Ref").RightClick
 	Setting.WebPackage("ReplayType") = 1
