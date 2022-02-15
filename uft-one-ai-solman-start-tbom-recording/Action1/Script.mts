@@ -3,9 +3,9 @@
 '		The script doesn't handle if the TCODE is in multiple BPH nodes, it will only create the TBOM work list item for the first BPH node in the list.
 '			This is due to a limitation of SAP Solution Manager, when you ask it to create multiple work list items, it only tells you the task number
 '			for the first record that you selected.
-'		The script doesn't handle if the status of the TBOM is Obsolete because the dev system didn't have any Obsolete status TBOMs.
 '		The script assumes that if there is no TBOM for the TCode, there is no Work Item created either.  If there is, the script will select the originally
 '			created workitem for that TCode (due to that same Solution Manager limitation), even though it may create another work item too.
+'		The script doesn't handle if the status of the TBOM is Obsolete because the dev system didn't have any Obsolete status TBOMs.
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 Dim BrowserExecutable, oShell, counter, fso, filespec
