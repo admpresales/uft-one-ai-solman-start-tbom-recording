@@ -31,9 +31,11 @@ If AIUtil("text_box", "User").Exist Then
 	Loop Until AIUtil("search").Exist(0)
 End If
 
-AIUtil.FindTextBlock("ID").Click
-AIUtil.FindTextBlock("(User-Defined Filter...)").Click
-AIUtil("text_box", micAnyText, micWithAnchorOnLeft, AIUtil("combobox", "", micWithAnchorOnLeft, AIUtil("combobox", "Reset"))).Type DataTable.Value("WorkItemNumber")
+AIUtil("gear_settings").Click
+AIUtil.FindTextBlock("Filter").Click
+AIUtil("combobox", "Reset").Type "ID"
+AIUtil("text_box", micAnyText, micWithAnchorOnLeft, AIUtil("combobox", "Reset")).Click
+AIUtil("text_box", micAnyText, micWithAnchorOnLeft, AIUtil("combobox", "Reset")).Type DataTable.Value("WorkItemNumber")
 AIUtil("button", "OK").Click
 counter = 0
 Do
