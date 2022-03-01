@@ -48,7 +48,17 @@ Do
 	End If
 Loop Until AIUtil.FindText(DataTable.Value("WorkItemNumber")).Exist(0)
 
-AIUtil.FindText(DataTable.Value("WorkItemNumber")).Click
+counter = 0
+Do
+	counter = counter + 1
+	AIUtil.FindText(DataTable.Value("WorkItemNumber")).Click	
+	If counter >= 60 Then
+		'msgbox "The search icon didn't show up within " & counter & " tries, check application."
+		Reporter.ReportEvent micFail, "Click WorkItemNumber", "The WorkItemNumber link "&  DataTable.Value("WorkItemNumber") & " didn't show up within " & counter & " tries, check application."
+		ExitTestIteration
+	End If
+Loop Until AIUtil("button", "Edit").Exist(0)
+
 AIUtil("button", "Edit").Click
 AIUtil("button", "Create TBOM").Click
 Set AppContext=Browser("CreationTime:=1")												'Set the variable for what application (in this case the browser) we are acting upon
